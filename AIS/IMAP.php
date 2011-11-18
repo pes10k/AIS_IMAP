@@ -206,6 +206,17 @@ class AIS_IMAP extends AIS_Debugable
     }
 
     /**
+     * Returns a boolean description of whether this object currently
+     * represents a live, valid connection to an mail server.
+     *
+     * @return true if the object is connected to a server, otherwise false
+     */
+    public function isConnected()
+    {
+        return ! empty($this->imap_stream);
+    }
+
+    /**
      * Returns an array of the names of the mailboxes in the current
      * connection, at all depths
      * Raises an exception if no connection has been created yet.
@@ -258,7 +269,7 @@ class AIS_IMAP extends AIS_Debugable
                     'mailbox_name' => $mailbox_name,
                     'imap_username' => $this->imap_username,
                     'imap_password' => $this->imap_password,
-                ),
+                )
             );
 
             $mailbox_imap_stream = imap_open(

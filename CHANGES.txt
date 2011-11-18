@@ -1,0 +1,4 @@
+2011-11-18
+---
+    - Fix small syntax error in IMAP.php
+    - Add AIS_IMAP::isConnected() method to check whether we have successfully connected to the server
