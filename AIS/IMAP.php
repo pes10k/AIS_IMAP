@@ -116,6 +116,17 @@ class AIS_IMAP extends AIS_Debugable
      */
     protected $imap_connection_type = 'imap';
 
+    /**
+     * Whether to require a secure connection.  Defaults to false,
+     * since many hosts do not support this option.
+     *
+     * (default value: false)
+     *
+     * @var bool
+     * @access protected
+     */
+    protected $imap_use_secure_connection = false;
+
     // =================
     // ! Pubic Methods
     // =================
@@ -148,6 +159,8 @@ class AIS_IMAP extends AIS_Debugable
      *  - host
      *  - port
      *  - connection type: either 'imap' or 'pop3'.  Defaults to 'imap'
+     *  - secure: a boolean value of whether to connect securely.  Defaults to
+     *      'false'  
      *
      * @param array $params a list of connection parameters to use when connecting
      *    to the IMAP server.  The valid parameters are listed above
@@ -162,6 +175,7 @@ class AIS_IMAP extends AIS_Debugable
             'host'      =>  'setHost',
             'port'      =>  'setPort',
             'type'      =>  'setConnectionType',
+            'secure'    =>  'setUseSecureConnection',
         );
 
         foreach ($possible_params as $param_key => $setter_name) {
@@ -186,10 +200,12 @@ class AIS_IMAP extends AIS_Debugable
     public function connect()
     {
         $this->imap_connection_description = sprintf(
-            '{%s:%s/%s}',
+            '{%s:%s%s%s%s}',
             $this->imap_host,
             $this->imap_port,
-            ($this->imap_connection_type === 'pop3') ? 'pop3' : 'imap'
+            ($this->imap_connection_type === 'pop3') ? '/pop3' : '/imap',
+            $this->imap_use_secure_connection ? '/ssl' : '',
+            $this->isInDebugMode() ? '/debug' : ''
         );
 
         $this->setDebugInformation(
@@ -490,6 +506,20 @@ class AIS_IMAP extends AIS_Debugable
             ? 'pop3'
             : 'imap';
 
+        return $this;
+    }
+
+    /**
+     * Set whether to use SSL/TSL when connecting to the mail server
+     *
+     * @param bool $use_secure_connection true if a secure connection
+     *      to the mail server should be attempted.  Otherwise false.
+     *
+     * @return AIS_IMAP Returns the current object for chaining
+     */
+    public function setUseSecureConnection($use_secure_connection)
+    {
+        $this->imap_use_secure_connection = !! $use_secure_connection;
         return $this;
     }
 

@@ -37,8 +37,8 @@
 // If you're not interested in the debugging information
 // you can delete the second line below.  Also, if you have a
 // PCR-0 autoloader setup, the below can be excluded.
-include_once 'AIS/IMAP.php';
-include_once 'AIS/Debugger.php';
+require_once 'AIS/IMAP.php';
+require_once 'AIS/Debugger.php';
 
 // First, construct an array with the connection parameters to the 
 // server and account you're trying to connect to.
@@ -104,12 +104,14 @@ $email_body_html = $emails[1]->htmlBody();
 
 $emails[2]->moveToMailbox($processed_mailbox);
 
-// Now, close the connection to the IMAP server, which "commits" the changes we made 
-// to messasges 1 and 3 above.  Note that passing true below actually deletes the messages
-// marked for deletion, instead of just leaving them "marked" for deletion.
+// Now, close the connection to the IMAP server, which "commits" the changes
+// we made to messasges 1 and 3 above.  Note that passing true below actually
+// deletes the messages marked for deletion, instead of just leaving them
+// "marked" for deletion.
 $IMAP->close(true);
 
-// Last, if we're in debugging mode, print all the debug messages we've gathered so far
+// Last, if we're in debugging mode, print all the debug messages we've
+// gathered so far
 if ($is_debug_mode) {
 
     echo $debugger->displayMessages();

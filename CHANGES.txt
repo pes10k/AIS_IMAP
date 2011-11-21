@@ -1,5 +1,8 @@
 2011-11-20
---
+---
+    - Added ability to set whether to connect securely
+    - Added ability to pull additional debugging information out of
+        connection
     - Remove dependency on PEAR Date class
     - Add support for explicitly setting IMAP or POP3
     - updated code example
