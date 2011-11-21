@@ -19,8 +19,6 @@
  *
  */
 
-require_once 'Date.php';
-
 /**
  * Instances of this class represent email messages in an IMAP mailbox.
  *
@@ -159,19 +157,19 @@ class AIS_IMAP_Email extends AIS_Debugable
     protected $subject;
 
     /**
-     * A PEAR Date object representing the date the email
+     * A DateTime object representing the date the email
      * received at
      *
-     * @var Date
+     * @var DateTime
      * @access protected
      */
     protected $recevied_date;
 
     /**
-     * A PEAR Date object representing the date the email was
+     * A DateTime object representing the date the email was
      * sent at
      *
-     * @var Date
+     * @var DateTime
      * @access protected
      */
     protected $sent_date;
@@ -443,8 +441,8 @@ class AIS_IMAP_Email extends AIS_Debugable
 
             // Next, populate the email with information about when the email was
             // sent and received
-            $this->received_date = new Date($header_data->udate);
-            $this->sent_date = new Date($header_data->date);
+            $this->received_date = new DateTime($header_data->udate);
+            $this->sent_date = new DateTime($header_data->date);
 
             // Next, there are several binary values that we can determine
             // by just checking for the presence or absence of an value
@@ -867,11 +865,11 @@ class AIS_IMAP_Email extends AIS_Debugable
     }
 
     /**
-     * Returns a PEAR Date object that
+     * Returns a DateTime object that
      * describes when the email was sent by its author
      *
      * @access public
-     * @return Date
+     * @return {Time
      */
     public function sentDate()
     {
@@ -887,15 +885,15 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     public function sentDateUnixTimestamp()
     {
-        return $this->sent_date->getTime();
+        return $this->sent_date->getTimestamp();
     }
 
     /**
-     * Returns a PEAR Date object that describes
+     * Returns a DateTime object that describes
      * when the email was received by this server
      *
      * @access public
-     * @return Date
+     * @return DateTime
      */
     public function receivedDate()
     {
@@ -911,7 +909,7 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     public function receivedDateUnixTimestamp()
     {
-        return $this->received_date->getTime();
+        return $this->received_date->getTimestamp();
     }
 
     /**

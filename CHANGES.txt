@@ -1,5 +1,6 @@
 2011-11-20
 --
+    - Remove dependency on PEAR Date class
     - Add support for explicitly setting IMAP or POP3
     - updated code example
 
