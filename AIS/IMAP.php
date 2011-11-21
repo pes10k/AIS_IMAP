@@ -105,6 +105,17 @@ class AIS_IMAP extends AIS_Debugable
      */
     protected $current_mailbox_connections = array();
 
+    /**
+     * The type of connection being used.  This is one of the connection
+     * protocols supported by the IMAP extensions (either 'pop3' or 'imap').
+     *
+     * (default value: 'imap')
+     *
+     * @var string
+     * @access protected
+     */
+    protected $imap_connection_type = 'imap';
+
     // =================
     // ! Pubic Methods
     // =================
@@ -136,6 +147,7 @@ class AIS_IMAP extends AIS_Debugable
      *  - username
      *  - host
      *  - port
+     *  - connection type: either 'imap' or 'pop3'.  Defaults to 'imap'
      *
      * @param array $params a list of connection parameters to use when connecting
      *    to the IMAP server.  The valid parameters are listed above
@@ -149,6 +161,7 @@ class AIS_IMAP extends AIS_Debugable
             'username'  =>  'setUsername',
             'host'      =>  'setHost',
             'port'      =>  'setPort',
+            'type'      =>  'setConnectionType',
         );
 
         foreach ($possible_params as $param_key => $setter_name) {
@@ -173,9 +186,10 @@ class AIS_IMAP extends AIS_Debugable
     public function connect()
     {
         $this->imap_connection_description = sprintf(
-            '{%s:%s}',
+            '{%s:%s/%s}',
             $this->imap_host,
-            $this->imap_port
+            $this->imap_port,
+            ($this->imap_connection_type === 'pop3') ? 'pop3' : 'imap'
         );
 
         $this->setDebugInformation(
@@ -458,6 +472,24 @@ class AIS_IMAP extends AIS_Debugable
     public function setHost($host)
     {
         $this->imap_host = $host;
+        return $this;
+    }
+
+    /**
+     * Set the type of connection being used (IMAP or POP3)
+     *
+     * @param string $type the type of server being connected to.
+     *      If 'pop3' is passed, POP3 is used.  Otherwise uses
+     *      'imap'
+     *
+     * @return AIS_IMAP Returns the current object for chaining
+     */
+    public function setConnectionType($type)
+    {
+        $this->imap_connection_type = (strtolower($type) === 'pop3')
+            ? 'pop3'
+            : 'imap';
+
         return $this;
     }
 

@@ -47,6 +47,7 @@ $params = array(
     'port'  =>  143,
     'username'  =>  'a.person',
     'password'  =>  'secret-password',
+    'type' => 'imap',
 );
 
 // The AIS_IMAP classes can be run in debugging mode, in which 
