@@ -1,3 +1,8 @@
+2011-11-20
+--
+    - Add support for explicitly setting IMAP or POP3
+    - updated code example
+
 2011-11-18
 ---
     - Fix small syntax error in IMAP.php
