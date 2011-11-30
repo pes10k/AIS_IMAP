@@ -441,7 +441,16 @@ class AIS_IMAP_Email extends AIS_Debugable
 
             // Next, populate the email with information about when the email was
             // sent and received
-            $this->received_date = new DateTime($header_data->udate);
+            if (is_numeric($header_data->udate)) {
+
+                $this->received_date = new DateTime();
+                $this->received_date->setTimestamp($header_data->udate);
+            }
+            else {
+
+                $this->received_date = new DateTime($header_data->udate);
+            }
+
             $this->sent_date = new DateTime($header_data->date);
 
             // Next, there are several binary values that we can determine
