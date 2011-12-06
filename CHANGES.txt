@@ -1,3 +1,8 @@
+2011-12-06
+---
+    - Change Email class so that the plain text body, html body, and and attachments fields are lazy loaded, to dramatically reduce the cost of iterating through a mailbox
+    - Small style / formatting fixes
+
 2011-11-29
 ---
     - Fix bug with date parsing introduced by moving from PEAR's

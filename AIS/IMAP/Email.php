@@ -255,6 +255,25 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     protected $priority;
 
+    /**
+     * A boolean description of whether the email's body has been parsed
+     * and built into HTML, plain and attachment sections.
+     *
+     * @var bool
+     * @access protected
+     */
+    protected $body_has_been_built = false;
+
+    /**
+     * A boolean description of whether the message was opened
+     * as a peak.  If so, when the message's body is parsed,
+     * the message will remain marked as "unread".
+     *
+     * @var bool
+     * @access protected
+     */
+    protected $opened_as_peek = false;
+
     // ==================
     // ! Public Methods
     // ==================
@@ -313,14 +332,7 @@ class AIS_IMAP_Email extends AIS_Debugable
 
             $mailbox_stream = $this->mailbox()->IMAPMailboxStream();
 
-            $body = ($peek)
-                ? imap_body($mailbox_stream, $this->index_id, FT_PEEK)
-                : imap_body($mailbox_stream, $this->index_id);
-
-            $this->body_plain = '';
-            $this->body_html = '';
-
-            $this->buildBodyContent();
+            $this->opened_as_peek = $peek;
 
             $header_data = imap_headerinfo($mailbox_stream, $this->index_id);
 
@@ -445,8 +457,8 @@ class AIS_IMAP_Email extends AIS_Debugable
 
                 $this->received_date = new DateTime();
                 $this->received_date->setTimestamp($header_data->udate);
-            }
-            else {
+
+            } else {
 
                 $this->received_date = new DateTime($header_data->udate);
             }
@@ -797,6 +809,33 @@ class AIS_IMAP_Email extends AIS_Debugable
         );
     }
 
+    /**
+     * The first time this message is called, it will build the contents of the
+     * email message, including the plain text body, HTML body, and attachments
+     * and return true.  All subsequent calls will do nothing and return false.
+     *
+     * @access protected
+     * @return bool
+     */
+    protected function buildBodyIfNeeded()
+    {
+        if ($this->body_has_been_built) {
+
+            return false;
+
+        } else {
+
+            $body = ($this->opened_as_peek)
+                ? imap_body($this->mailbox()->IMAPMailboxStream(), $this->index_id, FT_PEEK)
+                : imap_body($this->mailbox()->IMAPMailboxStream(), $this->index_id);
+
+            $this->buildBodyContent();
+            $this->body_has_been_built = true;
+
+            return true;
+        }
+    }
+
     // ===========
     // ! Getters
     // ===========
@@ -1013,6 +1052,8 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     public function attachments()
     {
+        $this->buildBodyIfNeeded();
+
         return $this->attachments;
     }
 
@@ -1038,6 +1079,8 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     public function plainBody()
     {
+        $this->buildBodyIfNeeded();
+
         return quoted_printable_decode($this->body_plain);
     }
 
@@ -1049,6 +1092,8 @@ class AIS_IMAP_Email extends AIS_Debugable
      */
     public function htmlBody()
     {
+        $this->buildBodyIfNeeded();
+
         return $this->body_html;
     }
 
