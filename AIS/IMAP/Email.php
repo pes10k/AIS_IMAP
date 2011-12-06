@@ -431,7 +431,6 @@ class AIS_IMAP_Email extends AIS_Debugable
 
             // First populate the to and cc porperties of the object
             // with AIS_IMAP_Address objects
-
             foreach (array('to', 'cc',) as $item) {
 
                 if ( ! empty($header_data->$item)) {
@@ -470,7 +469,7 @@ class AIS_IMAP_Email extends AIS_Debugable
             $boolean_values = array(
                 'Unseen'    =>  'is_unseen',
                 'Flagged'   =>  'is_flagged',
-                'Answered'=>    'is_answered',
+                'Answered'  =>  'is_answered',
                 'Deleted'   =>  'is_deleted',
                 'Draft'     =>  'is_draft',
             );
