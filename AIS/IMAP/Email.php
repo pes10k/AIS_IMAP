@@ -861,6 +861,14 @@ class AIS_IMAP_Email extends AIS_Debugable
           $date_time = substr($date_time, 0, $index_of_left_paren);
         }
 
+        // Also check to see if the there is an incorrect timezone specified
+        // at the end, such as Mon, 23 Jan 2012 01:19:12 UT (UT is not a valid
+        // timezone.
+        if (preg_match('/ [A-Z]{2}$/', $date_time) === 1) {
+
+            $date_time = substr($date_time, 0, strlen($date_time) - 3);
+        }
+
         return trim($date_time);
     }
 
