@@ -462,7 +462,7 @@ class AIS_IMAP_Email extends AIS_Debugable
                 $this->received_date = new DateTime($header_data->udate);
             }
 
-            $this->sent_date = new DateTime($header_data->date);
+            $this->sent_date = new DateTime($this->sanatizeDateTime($header_data->date));
 
             // Next, there are several binary values that we can determine
             // by just checking for the presence or absence of an value
@@ -833,6 +833,35 @@ class AIS_IMAP_Email extends AIS_Debugable
 
             return true;
         }
+    }
+
+    /**
+     * Does some cleaning to fix common problems in malformed email timestamps /
+     * headers.  For example, some email clients specify the timezone twice:
+     * eg: Mon, 12 Mar 2012 12:57:05 -0400 (GMT-04:00), which causes PHP to
+     * throw an exception.  This method tries to make sure that the timestamp
+     * can be correctly parsed.
+     *
+     * @param string $date_time
+     *   The reported time the email was sent, as reported in the email headers
+     *
+     * @return string
+     *   A string representing the same time provided, but with some processing
+     *   performed to make it easier for DateTime::__construct() to correctly
+     *   handle
+     */
+    protected function sanatizeDateTime($date_time)
+    {
+        // Check to see if the timezone was specified twice, and if so,
+        // strip the second, parenthisized version out.
+        $index_of_left_paren = strpos($date_time, '(');
+
+        if ($index_of_left_paren !== FALSE) {
+
+          $date_time = substr($date_time, 0, $index_of_left_paren);
+        }
+
+        return trim($date_time);
     }
 
     // ===========
