@@ -1,3 +1,7 @@
+2012-03-12
+---
+    - Add additional parsing / sanatizing to handle malformed dates in IMAP message headers
+
 2011-12-06
 ---
     - Change Email class so that the plain text body, html body, and and attachments fields are lazy loaded, to dramatically reduce the cost of iterating through a mailbox
